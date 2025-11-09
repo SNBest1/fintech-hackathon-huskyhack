@@ -4,6 +4,17 @@ node_modules
 # Ignore the build output directory
 dist
 
+# Ignore Vite / build artifacts
+build
+
+# Ignore editor/project configs
+.vscode
+.idea
+
+# Ignore env files (keeps secrets out of images)
+.env
+.env.*
+
 # Ignore git files
 .git
 .gitignore
@@ -19,3 +30,9 @@ docker-compose.yml
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Optional cache folders
+.cache
+.parcel-cache
+.nyc_output
+.turbo
