@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { MapPin, QrCode, ExternalLink } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
@@ -18,11 +17,10 @@ interface Deal {
 
 interface DealCardProps {
   deal: Deal;
+  onViewQR?: () => void;
 }
 
-export function DealCard({ deal }: DealCardProps) {
-  const [activated, setActivated] = useState(false);
-  const savings = deal.originalPrice - deal.discountedPrice;
+export function DealCard({ deal, onViewQR }: DealCardProps) {
 
   // Format expiry date to "Dec 31" format
   const formatExpiryDate = (dateString: string) => {
@@ -81,6 +79,7 @@ export function DealCard({ deal }: DealCardProps) {
         {/* Action Button */}
         <div className="flex gap-2">
           <button
+            onClick={onViewQR}
             className="flex-1 py-3 rounded-2xl bg-white border-2 border-[#7DD3C0] text-[#0A1F44] hover:bg-[#7DD3C0]/10 transition-all flex items-center justify-center gap-2"
           >
             <QrCode className="w-4 h-4" />

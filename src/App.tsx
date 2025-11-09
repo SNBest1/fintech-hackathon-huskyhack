@@ -139,7 +139,7 @@ export default function App() {
             <>
               {/* Top Section - Monthly Savings Overview */}
               <div className="bg-gradient-to-br from-[#0A1F44] via-[#1a3a6b] to-[#2a4a7b] px-6 pt-6 pb-6">
-                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(true)} showCategories={false} />
+                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(true)}/>
               </div>
 
               {/* Mid Section - Category Carousel */}
