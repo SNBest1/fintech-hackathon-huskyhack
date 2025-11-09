@@ -3,8 +3,11 @@ import { DealCard } from './components/DealCard';
 import { CategoryPill } from './components/CategoryPill';
 import { MonthlySavingsCard } from './components/MonthlySavingsCard';
 import { SavingsBreakdown } from './components/SavingsBreakdown';
-import { FullPageDeal } from './components/FullPageDeals';
-import { Home, ArrowLeftRight, Sparkles, MoreHorizontal } from 'lucide-react';
+import { FullPageDeal } from './components/FullPageDeal';
+import { SignIn } from './components/SignIn';
+import { Home, ArrowLeftRight, Sparkles, MoreHorizontal, MapPin } from 'lucide-react';
+import { Toaster } from './components/ui/sonner';
+import { toast } from 'sonner@2.0.3';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('nudge');
@@ -128,7 +131,9 @@ export default function App() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto pb-20">
-          {selectedDeal !== null ? (
+          {activeTab === 'more' ? (
+            <SignIn />
+          ) : selectedDeal !== null ? (
             <FullPageDeal 
               deal={deals.find(d => d.id === selectedDeal)!} 
               onClose={() => setSelectedDeal(null)} 
@@ -177,6 +182,28 @@ export default function App() {
                   )}
                 </div>
               </div>
+
+              {/* Location-Based Deal Button */}
+              <div className="px-6 pb-6">
+                <button
+                  onClick={() => toast(
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#7DD3C0] to-[#5ab3a0] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <span className="text-2xl">☕</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-slate-500 text-xs mb-0.5">SOUND CREDIT UNION</div>
+                        <div className="text-[#0A1F44] mb-1">Stumptown Coffee Nearby</div>
+                        <div className="text-slate-600 text-sm">You're 0.4 mi away! Get 25% off your order.</div>
+                      </div>
+                    </div>
+                  )}
+                  className="w-full py-4 bg-gradient-to-r from-[#7DD3C0] to-[#5ab3a0] text-white rounded-2xl flex items-center justify-center gap-2 hover:shadow-lg transition-all"
+                >
+                  <MapPin className="w-5 h-5" />
+                  <span>Check Nearby Deals</span>
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -222,6 +249,23 @@ export default function App() {
             </button>
           </div>
         </div>
+        
+        {/* Toast Notifications */}
+        <Toaster 
+          position="top-center" 
+          offset="44px"
+          toastOptions={{
+            style: {
+              background: 'white',
+              color: '#0A1F44',
+              border: 'none',
+              borderRadius: '16px',
+              padding: '16px',
+              boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
+              maxWidth: '340px',
+            },
+          }}
+        />
       </div>
     </div>
   );
