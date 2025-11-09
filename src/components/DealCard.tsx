@@ -37,8 +37,8 @@ export function DealCard({ deal, onViewQR }: DealCardProps) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      toast.error('You are not logged in', {
-        description: 'Please log in to open merchant apps',
+      toast.error('Merchant app not found on device', {
+        description: 'Please install and log in to the merchant apps',
       });
     }, 800);
   };

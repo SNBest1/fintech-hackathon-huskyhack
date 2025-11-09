@@ -41,8 +41,8 @@ export function FullPageDeal({ deal, onClose }: FullPageDealProps) {
     setLoadingMerchant(true);
     setTimeout(() => {
       setLoadingMerchant(false);
-      toast.error('You are not logged in', {
-        description: 'Please log in to access merchant apps',
+      toast.error('Merchant app not found on device', {
+        description: 'Please install and log in to the merchant apps',
       });
     }, 800);
   };
@@ -51,8 +51,8 @@ export function FullPageDeal({ deal, onClose }: FullPageDealProps) {
     setLoadingDirections(true);
     setTimeout(() => {
       setLoadingDirections(false);
-      toast.error('You are not logged in', {
-        description: 'Please log in to access directions',
+      toast.error('Google maps app not found on device', {
+        description: 'Please install and log in to the Google Maps app',
       });
     }, 800);
   };
