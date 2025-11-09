@@ -8,6 +8,10 @@ COPY package.json ./
 
 # Install dependencies
 RUN npm install
+RUN npm install react react-dom
+RUN npm install --save-dev typescript @types/react @types/react-dom
+RUN npm install lucide-react
+RUN npm install --save-dev typescript
 
 # Copy the rest of the application source code
 COPY . .
