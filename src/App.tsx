@@ -3,14 +3,14 @@ import { DealCard } from './components/DealCard';
 import { CategoryPill } from './components/CategoryPill';
 import { MonthlySavingsCard } from './components/MonthlySavingsCard';
 import { SavingsBreakdown } from './components/SavingsBreakdown';
-import { FullScreenChat } from './components/FullScreenChat';
+import { FullPageDeal } from './components/FullPageDeals';
 import { Home, ArrowLeftRight, Sparkles, MoreHorizontal } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('nudge');
   const [activeCategory, setActiveCategory] = useState('All');
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const [showFullScreenChat, setShowFullScreenChat] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState<number | null>(null);
 
   const categories = ['All', 'Food', 'Loans', 'Credit/Debit', 'Limited Time'];
 
@@ -128,13 +128,18 @@ export default function App() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto pb-20">
-          {showBreakdown ? (
+          {selectedDeal !== null ? (
+            <FullPageDeal 
+              deal={deals.find(d => d.id === selectedDeal)!} 
+              onClose={() => setSelectedDeal(null)} 
+            />
+          ) : showBreakdown ? (
             <SavingsBreakdown onBack={() => setShowBreakdown(false)} />
           ) : (
             <>
               {/* Top Section - Monthly Savings Overview */}
               <div className="bg-gradient-to-br from-[#0A1F44] via-[#1a3a6b] to-[#2a4a7b] px-6 pt-6 pb-6">
-                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(false)} showCategories={false} />
+                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(true)} showCategories={false} />
               </div>
 
               {/* Mid Section - Category Carousel */}
@@ -159,7 +164,11 @@ export default function App() {
                 <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-2">
                   {filteredDeals.length > 0 ? (
                     filteredDeals.map((deal) => (
-                      <DealCard key={deal.id} deal={deal} />
+                      <DealCard 
+                        key={deal.id} 
+                        deal={deal} 
+                        onViewQR={() => setSelectedDeal(deal.id)}
+                      />
                     ))
                   ) : (
                     <div className="w-full text-center py-8 text-slate-500">
@@ -213,12 +222,6 @@ export default function App() {
             </button>
           </div>
         </div>
-
-        {/* Full Screen Chat Modal */}
-        <FullScreenChat 
-          isOpen={showFullScreenChat} 
-          onClose={() => setShowFullScreenChat(false)} 
-        />
       </div>
     </div>
   );
