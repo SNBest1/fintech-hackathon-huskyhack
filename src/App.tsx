@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { NudgeAvatar } from './components/NudgeAvatar';
 import { DealCard } from './components/DealCard';
 import { CategoryPill } from './components/CategoryPill';
 import { MonthlySavingsCard } from './components/MonthlySavingsCard';
 import { SavingsBreakdown } from './components/SavingsBreakdown';
 import { FullScreenChat } from './components/FullScreenChat';
-import { Home, ArrowLeftRight, Sparkles, MoreHorizontal, Mic, Send } from 'lucide-react';
+import { Home, ArrowLeftRight, Sparkles, MoreHorizontal } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('nudge');
-  const [message, setMessage] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showFullScreenChat, setShowFullScreenChat] = useState(false);
@@ -134,45 +132,9 @@ export default function App() {
             <SavingsBreakdown onBack={() => setShowBreakdown(false)} />
           ) : (
             <>
-              {/* Top Section - AI Chat Assistant */}
+              {/* Top Section - Monthly Savings Overview */}
               <div className="bg-gradient-to-br from-[#0A1F44] via-[#1a3a6b] to-[#2a4a7b] px-6 pt-6 pb-6">
-                <div className="flex items-start gap-4 mb-4">
-                  <NudgeAvatar onClick={() => setShowFullScreenChat(true)} />
-                  <div className="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
-                    <p className="text-white text-sm">
-                      Hey Sarah 👋, I've found some ways you can save today!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Chat Input */}
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 mb-3">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Ask Nudge anything..."
-                      className="flex-1 bg-transparent text-white placeholder:text-white/60 outline-none text-sm"
-                    />
-                    <button className="p-2 bg-[#7DD3C0] rounded-full hover:bg-[#6bc3b0] transition-colors">
-                      <Mic className="w-4 h-4 text-[#0A1F44]" />
-                    </button>
-                    <button className="p-2 bg-[#7DD3C0] rounded-full hover:bg-[#6bc3b0] transition-colors">
-                      <Send className="w-4 h-4 text-[#0A1F44]" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Example Questions */}
-                <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/30 text-white text-xs hover:bg-white/20 transition-colors">
-                    💡 Ways to save more?
-                  </button>
-                  <button className="flex-1 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/30 text-white text-xs hover:bg-white/20 transition-colors">
-                    🎁 My unused perks?
-                  </button>
-                </div>
+                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(false)} showCategories={false} />
               </div>
 
               {/* Mid Section - Category Carousel */}
@@ -205,11 +167,6 @@ export default function App() {
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* Lower Section - Monthly Savings Overview */}
-              <div className="px-6 pb-6">
-                <MonthlySavingsCard onViewBreakdown={() => setShowBreakdown(true)} />
               </div>
             </>
           )}
