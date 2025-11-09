@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { MapPin, QrCode, ExternalLink } from 'lucide-react';
+import { MapPin, QrCode, ExternalLink, Loader2 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { toast } from 'sonner@2.0.3';
 
 interface Deal {
   id: number;
@@ -18,11 +19,11 @@ interface Deal {
 
 interface DealCardProps {
   deal: Deal;
+  onViewQR?: () => void;
 }
 
-export function DealCard({ deal }: DealCardProps) {
-  const [activated, setActivated] = useState(false);
-  const savings = deal.originalPrice - deal.discountedPrice;
+export function DealCard({ deal, onViewQR }: DealCardProps) {
+  const [loading, setLoading] = useState(false);
 
   // Format expiry date to "Dec 31" format
   const formatExpiryDate = (dateString: string) => {
@@ -30,6 +31,16 @@ export function DealCard({ deal }: DealCardProps) {
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const monthName = date.toLocaleString('en-US', { month: 'short' });
     return `${monthName} ${day}`;
+  };
+
+  const handleOpenInApp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toast.error('You are not logged in', {
+        description: 'Please log in to open merchant apps',
+      });
+    }, 800);
   };
 
   return (
@@ -81,16 +92,27 @@ export function DealCard({ deal }: DealCardProps) {
         {/* Action Button */}
         <div className="flex gap-2">
           <button
+            onClick={onViewQR}
             className="flex-1 py-3 rounded-2xl bg-white border-2 border-[#7DD3C0] text-[#0A1F44] hover:bg-[#7DD3C0]/10 transition-all flex items-center justify-center gap-2"
           >
-            <QrCode className="w-4 h-4" />
             <span className="text-sm">View QR Code</span>
           </button>
           <button
-            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#7DD3C0] to-[#5ab3a0] text-white hover:shadow-md transition-all flex items-center justify-center gap-2"
+            onClick={handleOpenInApp}
+            disabled={loading}
+            className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#7DD3C0] to-[#5ab3a0] text-white hover:shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70"
           >
-            <ExternalLink className="w-4 h-4" />
-            <span className="text-sm">Open in app</span>
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Loading...</span>
+              </>
+            ) : (
+              <>
+                <ExternalLink className="w-4 h-4" />
+                <span className="text-sm">Open in app</span>
+              </>
+            )}
           </button>
         </div>
         

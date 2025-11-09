@@ -1,6 +1,9 @@
-import { ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronRight, Loader2 } from 'lucide-react';
+import { toast } from 'sonner@2.0.3';
 
 export function ProjectionCard() {
+  const [loading, setLoading] = useState(false);
   const monthlyProjection = [
     { month: 'Aug', amount: 124, projected: false },
     { month: 'Sep', amount: 130, projected: true },
@@ -10,6 +13,16 @@ export function ProjectionCard() {
   ];
 
   const maxAmount = Math.max(...monthlyProjection.map(d => d.amount));
+
+  const handleViewTrends = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toast.error('You are not logged in', {
+        description: 'Please log in to view annual trends',
+      });
+    }, 800);
+  };
 
   return (
     <div className="bg-gradient-to-br from-[#0A1F44] to-[#2a4a7b] rounded-3xl p-6 shadow-xl text-white">
@@ -51,9 +64,22 @@ export function ProjectionCard() {
         </div>
       </div>
 
-      <button className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors flex items-center justify-center gap-2">
-        <span>View Annual Trends</span>
-        <ChevronRight className="w-4 h-4" />
+      <button 
+        onClick={handleViewTrends}
+        disabled={loading}
+        className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Loading...</span>
+          </>
+        ) : (
+          <>
+            <span>View Annual Trends</span>
+            <ChevronRight className="w-4 h-4" />
+          </>
+        )}
       </button>
     </div>
   );

@@ -1,5 +1,7 @@
-import { ArrowLeft, MapPin, QrCode, Clock, Tag, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, MapPin, QrCode, Clock, Tag, ExternalLink, Loader2 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { toast } from 'sonner@2.0.3';
 
 interface Deal {
   id: number;
@@ -21,6 +23,9 @@ interface FullPageDealProps {
 }
 
 export function FullPageDeal({ deal, onClose }: FullPageDealProps) {
+  const [loadingMerchant, setLoadingMerchant] = useState(false);
+  const [loadingDirections, setLoadingDirections] = useState(false);
+
   const savings = deal.originalPrice - deal.discountedPrice;
   const savingsPercent = ((savings / deal.originalPrice) * 100).toFixed(0);
 
@@ -30,6 +35,26 @@ export function FullPageDeal({ deal, onClose }: FullPageDealProps) {
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const monthName = date.toLocaleString('en-US', { month: 'short' });
     return `${monthName} ${day}, ${year}`;
+  };
+
+  const handleMerchantApp = () => {
+    setLoadingMerchant(true);
+    setTimeout(() => {
+      setLoadingMerchant(false);
+      toast.error('You are not logged in', {
+        description: 'Please log in to access merchant apps',
+      });
+    }, 800);
+  };
+
+  const handleDirections = () => {
+    setLoadingDirections(true);
+    setTimeout(() => {
+      setLoadingDirections(false);
+      toast.error('You are not logged in', {
+        description: 'Please log in to access directions',
+      });
+    }, 800);
   };
 
   return (
@@ -138,14 +163,40 @@ export function FullPageDeal({ deal, onClose }: FullPageDealProps) {
 
         {/* Action Buttons */}
         <div className="space-y-3">
-          <button className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#7DD3C0] to-[#5ab3a0] text-white hover:shadow-lg transition-all flex items-center justify-center gap-2">
-            <ExternalLink className="w-5 h-5" />
-            <span>Open in Merchant App</span>
+          <button 
+            onClick={handleMerchantApp}
+            disabled={loadingMerchant}
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#7DD3C0] to-[#5ab3a0] text-white hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {loadingMerchant ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Loading...</span>
+              </>
+            ) : (
+              <>
+                <ExternalLink className="w-5 h-5" />
+                <span>Open in Merchant App</span>
+              </>
+            )}
           </button>
           
-          <button className="w-full py-4 rounded-2xl bg-white border-2 border-slate-200 text-[#0A1F44] hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-            <MapPin className="w-5 h-5" />
-            <span>Get Directions</span>
+          <button 
+            onClick={handleDirections}
+            disabled={loadingDirections}
+            className="w-full py-4 rounded-2xl bg-white border-2 border-slate-200 text-[#0A1F44] hover:bg-slate-50 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {loadingDirections ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Loading...</span>
+              </>
+            ) : (
+              <>
+                <MapPin className="w-5 h-5" />
+                <span>Get Directions</span>
+              </>
+            )}
           </button>
         </div>
 
