@@ -10,6 +10,7 @@ import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner@2.0.3';
 
 export default function App() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('nudge');
   const [activeCategory, setActiveCategory] = useState('All');
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -131,8 +132,10 @@ export default function App() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto pb-20">
-          {activeTab === 'more' ? (
-            <SignIn />
+          {!isSignedIn ? (
+            <SignIn onSignIn={() => setIsSignedIn(true)} />
+          ) : activeTab === 'more' ? (
+            <SignIn onSignIn={() => setIsSignedIn(true)} isAlreadySignedIn={true} />
           ) : selectedDeal !== null ? (
             <FullPageDeal 
               deal={deals.find(d => d.id === selectedDeal)!} 

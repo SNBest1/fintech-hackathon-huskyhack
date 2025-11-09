@@ -17,10 +17,10 @@ export function SavingsBreakdown({ onBack }: SavingsBreakdownProps) {
     { icon: '🛍️', name: 'Shopping', amount: 24, color: '#2a4a7b', percentage: 19 },
   ];
 
-  const insights = [
-    "You saved 15% more on food this month!",
-    "Paying your loan 3 days early boosted your credit impact.",
-    "Want to set a goal for next month? — Set Goal (1-click)"
+  const advice = [
+    "Use your Sound Credit Union credit card to earn 1 point on every dollar you spend!",
+    "You have 20,000 points saved up that can be redeemed for $20 added to your account.",
+    "Redeem your points for travel, merchandise, gift cards, and more!"
   ];
 
   return (
@@ -85,19 +85,19 @@ export function SavingsBreakdown({ onBack }: SavingsBreakdownProps) {
         </div>
       </div>
 
-      {/* Nudge's Insights Section */}
+      {/* Nudge Advice Section */}
       <div className="px-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="scale-75">
             <NudgeAvatar />
           </div>
           <h2 className="text-[#0A1F44]">
-            Nudge's Insights
+            Nudge Advice
           </h2>
         </div>
         <div className="space-y-3">
-          {insights.map((insight, index) => (
-            <InsightCard key={index} insight={insight} />
+          {advice.map((adviceItem, index) => (
+            <InsightCard key={index} insight={adviceItem} />
           ))}
         </div>
       </div>

@@ -1,19 +1,40 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 
-export function SignIn() {
+interface SignInProps {
+  onSignIn: () => void;
+  isAlreadySignedIn?: boolean;
+}
+
+export function SignIn({ onSignIn, isAlreadySignedIn = false }: SignInProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign in logic here
-    console.log('Sign in with:', username, password);
+    // Only sign in if both fields have text
+    if (username.trim() && password.trim()) {
+      console.log('Sign in with:', username, password);
+      onSignIn();
+    }
   };
 
+  const isFormValid = username.trim() !== '' && password.trim() !== '';
+
   return (
-    <div className="min-h-full bg-gradient-to-b from-white to-slate-50 flex flex-col items-center justify-center px-6 py-8">
+    <div className="min-h-full bg-gradient-to-b from-white to-slate-50 flex flex-col items-center justify-center px-6 py-8 relative">
+      {/* Grayed Out Overlay */}
+      {isAlreadySignedIn && (
+        <div className="absolute inset-0 bg-slate-400/60 backdrop-blur-sm z-10 flex items-center justify-center">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 mx-6 text-center">
+            <div className="text-5xl mb-4">✓</div>
+            <h2 className="text-[#0A1F44] mb-2">Already Signed In</h2>
+            <p className="text-slate-600 text-sm">You're currently logged into your account</p>
+          </div>
+        </div>
+      )}
+
       {/* Logo and Header */}
       <div className="text-center mb-8">
         <div className="w-20 h-20 bg-gradient-to-br from-[#0A1F44] to-[#1a3a6b] rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg">
@@ -91,7 +112,12 @@ export function SignIn() {
             {/* Sign In Button */}
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-[#0A1F44] to-[#1a3a6b] text-white rounded-xl hover:shadow-lg transition-all text-center"
+              disabled={!isFormValid}
+              className={`w-full py-4 rounded-xl transition-all text-center ${
+                isFormValid
+                  ? 'bg-gradient-to-r from-[#0A1F44] to-[#1a3a6b] text-white hover:shadow-lg'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              }`}
             >
               Sign In
             </button>
@@ -109,6 +135,7 @@ export function SignIn() {
             <div className="flex gap-3">
               <button
                 type="button"
+                onClick={onSignIn}
                 className="flex-1 py-3 bg-slate-50 text-slate-700 rounded-xl border-2 border-slate-200 hover:bg-slate-100 transition-colors flex items-center justify-center gap-2"
               >
                 <span className="text-xl">👆</span>
@@ -116,6 +143,7 @@ export function SignIn() {
               </button>
               <button
                 type="button"
+                onClick={onSignIn}
                 className="flex-1 py-3 bg-slate-50 text-slate-700 rounded-xl border-2 border-slate-200 hover:bg-slate-100 transition-colors flex items-center justify-center gap-2"
               >
                 <span className="text-xl">😊</span>
