@@ -1,11 +1,21 @@
 
-  # Modern Mobile Banking Interface
+### Modern Mobile Banking Interface
 
-  This is a code bundle for Modern Mobile Banking Interface. The original project is available at https://www.figma.com/design/LzonqMGbHZV25udDVGYBfx/Modern-Mobile-Banking-Interface.
+## Docker Setup
 
-  ## Running the code
+To run the application using Docker:
 
-  Run `npm i` to install the dependencies.
+1. Build the Docker images (if not already built):
+   ```bash
+   docker-compose build
+   ```
+2. Start the application in detached mode:
+   ```bash
+   docker-compose up -d
+   ```
+3. The application should now be accessible in your browser, typically at `http://localhost`.
 
-  Run `npm run dev` to start the development server.
-  
+4. To stop the application:
+   ```bash
+   docker-compose down
+   ```
