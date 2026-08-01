@@ -43,6 +43,65 @@ Open [http://localhost:3000](http://localhost:3000) — the UI renders inside an
 
 ---
 
+## Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│  Browser — React 18 + Vite + Tailwind        │
+│  rendered inside an iPhone frame             │
+│                                              │
+│  DealCard · SavingsChart · InsightCard       │
+│  CategoryBreakdown · ProjectionCard          │
+└───────────────────────┬──────────────────────┘
+                        │  GET /api/savings/analysis
+                        ▼
+┌──────────────────────────────────────────────┐
+│  Express (src/server/index.js)               │
+│                                              │
+│  1. compute totals + MoM change  ← plain JS  │
+│  2. build a one-line summary string          │
+│  3. ask GPT-4o-mini to phrase it             │
+│                                              │
+│  returns { totalSaved, changePercent,        │
+│            timeline, insight }               │
+└───────────────────────┬──────────────────────┘
+                        │
+                        ▼
+                 OpenAI gpt-4o-mini
+                 (max_tokens: 100)
+```
+
+## Why this architecture
+
+**The model never touches the numbers.**
+
+Every figure a member sees — total saved, month-over-month change, the
+projection — is computed in plain JavaScript before OpenAI is called. The model
+receives an already-finished summary string and is asked to do exactly one
+thing: say it in an encouraging sentence or two. It cannot alter a balance,
+because it is never given the arithmetic to do.
+
+That boundary is deliberate. This is a credit-union feature; a hallucinated
+savings figure is not a cosmetic bug, it is a member being told something false
+about their own money. Keeping the LLM strictly on the presentation side of the
+line means the worst failure mode is awkward phrasing.
+
+**Why `gpt-4o-mini` rather than a larger model?** The job is one sentence of
+encouragement over a pre-computed summary, capped at 100 tokens. A larger model
+would cost more and respond slower to produce the same sentence. Model choice
+should follow the task, and this task is small.
+
+*What it costs:* the insight is generic by construction. It cannot spot
+something genuinely surprising in the data, because it never sees the data —
+only the summary. Giving it the raw transaction history would produce sharper
+advice and reintroduce exactly the risk the boundary exists to prevent.
+
+**The savings data is mocked.** `src/server/index.js` serves a hardcoded
+five-month array. In a real deployment that array is the only thing that needs
+replacing — the endpoint shape, the frontend, and the LLM boundary all stay as
+they are. At a hackathon, wiring a real core-banking integration was neither
+possible nor the point.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -72,6 +131,7 @@ Available at `http://localhost:8080`.
 The Express server powers the AI savings analysis endpoint:
 
 ```bash
+cp .env.example .env    # then add your key
 OPENAI_API_KEY=your_key node src/server/index.js
 ```
 
@@ -81,4 +141,5 @@ OPENAI_API_KEY=your_key node src/server/index.js
 
 ## Team
 
-Built by the HuskyHack team for the Sound Credit Union fintech challenge.
+Nipun Saini and the HuskyHack team — built at HuskyHack 2025 for the
+Sound Credit Union fintech challenge.
